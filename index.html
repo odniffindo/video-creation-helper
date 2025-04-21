@@ -8,6 +8,38 @@
       font-family: sans-serif;
       padding: 20px;
       background-color: #f9f9f9;
+      position: relative;
+    }
+
+    .top-buttons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .top-buttons button {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .top-buttons button:hover {
+      background: #3730a3;
+    }
+
+    .copy-feedback {
+      font-size: 14px;
+      color: white;
     }
 
     table {
@@ -127,6 +159,11 @@
 </head>
 <body>
 
+<div class="top-buttons">
+  <button id="copyScriptPrompt">Script Prompt</button>
+  <button id="copyImagePrompt">Image Prompt</button>
+</div>
+
 <h2>Paste JSON Script</h2>
 <textarea id="jsonInput" rows="12" style="width: 100%; padding: 10px;"></textarea><br>
 <button id="loadScenes">Load Scenes</button>
@@ -139,6 +176,33 @@
 <script>
   let scriptData = null;
   const imagesByScene = {};
+
+  const scriptPromptText = `Write a detailed script for a short animated film.
+Include:
+- Scene-by-scene breakdown
+- Characters and dialogue
+- Visual descriptions
+- Emotional tone`;
+
+  const imagePromptText = `Generate image prompts for each scene based on:
+- Character actions
+- Background setting
+- Lighting and mood
+- Style: Studio Ghibli meets Pixar`;
+
+  function setupClipboardButton(buttonId, textToCopy) {
+    const btn = document.getElementById(buttonId);
+    btn.addEventListener("click", () => {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        const originalText = btn.textContent;
+        btn.textContent = "✔️ Copied!";
+        setTimeout(() => btn.textContent = originalText, 1000);
+      });
+    });
+  }
+
+  setupClipboardButton("copyScriptPrompt", scriptPromptText);
+  setupClipboardButton("copyImagePrompt", imagePromptText);
 
   document.getElementById("loadScenes").addEventListener("click", () => {
     try {
@@ -166,11 +230,9 @@
     Object.entries(script).forEach(([sceneNum, { text, prompt }]) => {
       const row = tbody.insertRow();
 
-      // Scene #
       const sceneCell = row.insertCell();
       sceneCell.textContent = sceneNum;
 
-      // Prompt
       const promptCell = row.insertCell();
       promptCell.className = "prompt-cell";
       promptCell.innerHTML = `<div>${prompt}</div>`;
@@ -188,7 +250,6 @@
       });
       promptCell.appendChild(copyBtn);
 
-      // Image drop zone
       const imageCell = row.insertCell();
       const dropZone = document.createElement("div");
       dropZone.className = "image-drop-zone";
@@ -220,7 +281,6 @@
         reader.readAsDataURL(file);
       };
 
-      // Handle paste
       dropZone.addEventListener("paste", (e) => {
         const items = e.clipboardData.items;
         for (const item of items) {
@@ -233,7 +293,6 @@
         }
       });
 
-      // Handle drag & drop
       dropZone.addEventListener("dragover", e => e.preventDefault());
       dropZone.addEventListener("drop", e => {
         e.preventDefault();
