@@ -177,18 +177,46 @@
   let scriptData = null;
   const imagesByScene = {};
 
-  const scriptPromptText = `Write a detailed script for a short animated film.
-Include:
-- Scene-by-scene breakdown
-- Characters and dialogue
-- Visual descriptions
-- Emotional tone`;
+  const scriptPromptText = `https://copyposse.com/blog/this-simple-short-form-video-script-formula-has-generated-millions-of-views/
 
-  const imagePromptText = `Generate image prompts for each scene based on:
-- Character actions
-- Background setting
-- Lighting and mood
-- Style: Studio Ghibli meets Pixar`;
+Take a look at the above website to learn some important skills about writing a script for a short form video and creating an enticing and engaging video. 
+
+Now that you are an expert in short form video creation, I would like you to create a video script for me based on a certain topic.
+
+The topic of the video is:
+
+Provide the script exactly in the json format provided below. You are to provide a video title and descriptions for various social media platforms. Any call to actions are to be done in the captions not the video themselves. You are to consider the whole video format and are to create simple descriptions of some images you would like each scene to have. This will go in the prompt section of the json. Dont ask for images with too much text like calculators and calenders etc. 
+Use language that flows off the tongue nicely. Like having it as five dollars rather than $5.
+
+Here is the json format to follow exactly. (The number of scenes is up to you):
+{
+  "title": "The title of the video",
+  "youtube_description": "The full YouTube description including hashtags, links, and credits",
+  "instagram_caption": "The caption to use when posting this video to Instagram",
+  "tiktok_caption": "The caption to use when posting this video to TikTok",
+  "script": {
+    "1": {
+      "text": "The voiceover or narration text for scene 1",
+      "prompt": "An AI-friendly image prompt for scene 1"
+    },
+    "2": {
+      "text": "The voiceover or narration text for scene 2",
+      "prompt": "An AI-friendly image prompt for scene 2"
+    }
+  }
+}`;
+
+  const imagePromptText = `https://medium.com/design-bootcamp/tips-to-create-re-usable-prompts-that-produce-consistent-images-d83c6dbf2511
+
+Look at and read the above website and learn about prompting an ai image generation tool to create the exact type of image that you want.
+
+You are now an expert prompter.
+
+Some additional things to consider when prompting are as follows.
+- Dont ask for things that may contain a lot of written text or font like calanders, calculators etc. If text is required, be very specific about the text placement etc. But avoid using text if possible.
+- Only prompt things that are based on reality and dont be ambiguous.
+
+As a practice, please provide an example prompt of anything you would like`;
 
   function setupClipboardButton(buttonId, textToCopy) {
     const btn = document.getElementById(buttonId);
