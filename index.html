@@ -108,7 +108,15 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      caret-color: transparent;
+      user-select: none;
     }
+
+.image-drop-zone:focus {
+  outline: 2px dashed #4f46e5;
+  outline-offset: -2px;
+  box-shadow: none; /* Removes iOS/Safari glow */
+}
 
     .image-drop-zone img {
       max-width: 100px;
@@ -390,6 +398,15 @@ The video topic is:
       const dropZone = document.createElement("div");
       dropZone.className = "image-drop-zone";
       dropZone.setAttribute("tabindex", "0");
+dropZone.setAttribute("contenteditable", "true");
+
+// Prevent typing in it
+dropZone.addEventListener("keydown", (e) => {
+  // Allow shortcuts like Cmd+V, but block all typing
+  if (!(e.metaKey || e.ctrlKey)) {
+    e.preventDefault();
+  }
+});
 
       const dropPlaceholder = document.createElement("span");
       dropPlaceholder.textContent = "Paste or drop an image here";
@@ -418,16 +435,27 @@ The video topic is:
       };
 
       dropZone.addEventListener("paste", (e) => {
-        const items = e.clipboardData.items;
-        for (const item of items) {
-          if (item.type.startsWith("image/")) {
-            const blob = item.getAsFile();
-            handleImage(blob);
-            e.preventDefault();
-            break;
-          }
-        }
-      });
+  const items = e.clipboardData.items;
+  let foundImage = false;
+
+  for (const item of items) {
+    if (item.type.startsWith("image/")) {
+      const blob = item.getAsFile();
+      handleImage(blob);
+      foundImage = true;
+      break;
+    }
+  }
+
+  // Always prevent default paste (to block text insertion)
+  e.preventDefault();
+
+  // Optionally, you can alert or give feedback if it wasn't an image
+  if (!foundImage) {
+    console.log("Please paste an image.");
+  }
+});
+
 
       dropZone.addEventListener("dragover", e => e.preventDefault());
       dropZone.addEventListener("drop", e => {
