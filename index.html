@@ -95,10 +95,7 @@
     }
 
     .json-input {
-      font-size: 40px;    
-      transform: scale(0.3);  
-      transform-origin: top left; 
-      display: inline-block;  
+      font-size: 40px;
     }
 
     .image-drop-zone {
@@ -118,9 +115,6 @@
       caret-color: transparent;
       user-select: none;
       font-size: 40px;
-      transform: scale(0.3);  
-      transform-origin: top left; 
-      display: inline-block; 
     }
 
 .image-drop-zone:focus {
@@ -421,7 +415,7 @@ dropZone.addEventListener("keydown", (e) => {
 
 
       const dropPlaceholder = document.createElement("span");
-      dropPlaceholder.textContent = "Paste or drop an image here";
+      dropPlaceholder.textContent = "";
       dropZone.appendChild(dropPlaceholder);
 
       const handleImage = (file) => {
