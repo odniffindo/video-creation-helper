@@ -532,7 +532,7 @@ document.getElementById("uploadZipBtn").addEventListener("click", async () => {
   formData.append("file", file);
 
   try {
-    const response = await fetch("http://localhost:5000/upload", {
+    const response = await fetch("http://10.204.180.26:10000/upload", {
       method: "POST",
       body: formData,
     });
