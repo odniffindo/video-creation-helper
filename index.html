@@ -218,6 +218,7 @@
 <div id="sceneTableContainer"></div>
 
 <button id="generateZipBtn" style="display: none;">Download ZIP</button>
+<button id="uploadZipBtn" style="display: none;">Download ZIP</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
@@ -277,6 +278,7 @@ The video topic is:
 
   function renderTable(script) {
     document.getElementById("generateZipBtn").style.display = "inline-block";
+    document.getElementById("uploadZipBtn").style.display = "inline-block";
     const container = document.getElementById("sceneTableContainer");
     const table = document.createElement("table");
     const thead = table.createTHead();
@@ -501,6 +503,54 @@ dropZone.addEventListener("keydown", (e) => {
     link.click();
     document.body.removeChild(link);
   });
+
+
+
+document.getElementById("uploadZipBtn").addEventListener("click", async () => {
+  if (!scriptData) return alert("Please load a script first.");
+
+  const zip = new JSZip();
+  zip.file("meta.json", JSON.stringify(scriptData, null, 2));
+
+  for (const [scene, file] of Object.entries(imagesByScene)) {
+    const blob = await file.arrayBuffer();
+    const ext = file.name.split('.').pop() || "png";
+    zip.file(`${scene}.${ext}`, blob);
+  }
+
+  for (const [scene, blob] of Object.entries(audioByScene)) {
+    const buffer = await blob.arrayBuffer();
+    zip.file(`${scene}.webm`, buffer);
+  }
+
+  // Generate the ZIP blob
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+  const file = new File([zipBlob], "scenes.zip", { type: "application/zip" });
+
+  // Prepare the request
+  const formData = new FormData();
+  formData.append("file", file);
+
+  try {
+    const response = await fetch("http://localhost:5000/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+    console.log("Server response:", result);
+
+    if (response.ok) {
+      alert("Upload successful!");
+    } else {
+      alert("Upload failed: " + (result.error || "Unknown error"));
+    }
+  } catch (error) {
+    console.error("Upload error:", error);
+    alert("Something went wrong.");
+  }
+});
+
 
 document.getElementById("jsonInput").addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) {
