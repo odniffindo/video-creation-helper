@@ -542,7 +542,7 @@ document.getElementById("uploadZipBtn").addEventListener("click", async () => {
 
   // Generate the ZIP blob
   const zipBlob = await zip.generateAsync({ type: "blob" });
-  const file = new File([zipBlob], "scenes.zip", { type: "application/zip" });
+  const file = new File([zipBlob], `${(scriptData.title || "zipfile").replace(/[^\w\d-]/g, "_")}.zip`, { type: "application/zip" });
 
   // Prepare the request
   const formData = new FormData();
