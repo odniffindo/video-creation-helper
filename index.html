@@ -412,6 +412,18 @@ dropZone.addEventListener("keydown", (e) => {
   }
 });
 
+dropZone.addEventListener("beforeinput", (e) => {
+  e.preventDefault(); // blocks any text from being entered
+});
+
+dropZone.addEventListener("focus", (e) => {
+  // blur immediately if it's trying to show a keyboard
+  if (/Android/i.test(navigator.userAgent)) {
+    setTimeout(() => dropZone.blur(), 0);
+  }
+});
+
+
       const dropPlaceholder = document.createElement("span");
       dropPlaceholder.textContent = "Paste or drop an image here";
       dropZone.appendChild(dropPlaceholder);
